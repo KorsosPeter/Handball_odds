@@ -62,6 +62,7 @@ def get_json(url: str, params: Dict = None, retries: int = 3, sleep: float = 0.5
 def get_scheduled_events(date_str: str) -> List[MatchInfo]:
     url = f"{BASE_URL}/sport/{SPORT}/scheduled-events/{date_str}"
     data = get_json(url)
+    print("DEBUG RAW RESPONSE:") 
     print(json.dumps(data, indent=2))
     if not data or "events" not in data:
         return []
