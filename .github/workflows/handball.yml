@@ -29,13 +29,14 @@ jobs:
       - name: Run script
         run: python handball_expected_goals.py $(date +'%Y-%m-%d')
 
-      - name: List files after script
+      - name: List generated files
         run: ls -R .
 
-      - name: Upload artifact for GitHub Pages
+      - name: Upload ONLY generated files to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: ./
+          retention-days: 1
 
   deploy:
     runs-on: ubuntu-latest
