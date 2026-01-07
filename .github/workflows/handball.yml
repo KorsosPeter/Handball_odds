@@ -1,0 +1,43 @@
+name: Handball Expected Goals
+
+on:
+  schedule:
+    - cron: "5 0 * * *"   # Runs at 00:05 UTC daily
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: pip install requests
+
+    - name: Run script
+      run: python handball_expected_goals.py $(date +'%Y-%m-%d')
+
+    - name: Upload JSON to GitHub Pages
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: .
+  
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
