@@ -48,9 +48,13 @@ class MatchWithExpectedGoals:
 
 
 def get_json(url: str, params: Dict = None, retries: int = 3, sleep: float = 0.5):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+    }
+
     for attempt in range(retries):
         try:
-            response = requests.get(url, params=params, timeout=10)
+            response = requests.get(url, params=params, headers=headers, timeout=10)
             if response.status_code == 200:
                 return response.json()
         except requests.RequestException:
