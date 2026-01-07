@@ -5,37 +5,39 @@ on:
     - cron: "5 0 * * *"   # Runs at 00:05 UTC daily
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: pip install requests
+      - name: Install dependencies
+        run: pip install requests
 
-    - name: Run script
-      run: python handball_expected_goals.py $(date +'%Y-%m-%d')
+      - name: Run script
+        run: python handball_expected_goals.py $(date +'%Y-%m-%d')
 
-    - name: Upload artifact for GitHub Pages
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: .
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
 
   deploy:
-    needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
+    needs: build
 
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
-
