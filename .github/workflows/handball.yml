@@ -2,7 +2,7 @@ name: Handball Expected Goals
 
 on:
   schedule:
-    - cron: "5 0 * * *"   # Runs at 00:05 UTC daily
+    - cron: "5 0 * * *"
   workflow_dispatch:
 
 permissions:
@@ -32,12 +32,16 @@ jobs:
       - name: List generated files
         run: ls -R .
 
-      - name: Upload generated files to GitHub Pages
+      - name: Prepare files for GitHub Pages
+        run: |
+          mkdir public
+          cp handball_expected_goals.json public/
+          cp handball_expected_goals_*.csv public/
+
+      - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: |
-            handball_expected_goals.json
-            handball_expected_goals_*.csv
+          path: public
 
   deploy:
     runs-on: ubuntu-latest
